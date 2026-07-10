@@ -1,8 +1,11 @@
 <?php
+require_once __DIR__ . '/config/Database.php';
 /**
  * Arquivo Index - Ponto de entrada único da aplicação (Front Controller)
  */
 
+require_once __DIR__ . '/config/Database.php';
+require_once __DIR__ . '/models/Cliente.php';
 require_once __DIR__ . '/controllers/ClienteController.php';
 
 // Instancia o controller de clientes

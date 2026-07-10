@@ -10,24 +10,23 @@ require_once __DIR__ . '/../models/Cliente.php';
 
 class ClienteController {
     
-    private $db;
     private $cliente;
 
     /**
-     * Construtor - Inicializa a conexão com o banco e o modelo
+     * Construtor - Inicializa o modelo
      */
     public function __construct() {
-        $this->db = Database::getConnection();
-        $this->cliente = new Cliente($this->db);
+        // Como o seu Model (Cliente.php) já faz a conexão com o banco internamente,
+        // só precisamos instanciar a classe Cliente aqui.
+        $this->cliente = new Cliente();
     }
 
     /**
      * Método principal (Index) - Lista todos os clientes
      */
     public function index() {
-        // Busca os clientes através do Model
-        $stmt = $this->cliente->read();
-        $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Busca os clientes através do Model (que já retorna o array pronto)
+        $clientes = $this->cliente->read();
 
         // Envia os dados para a View de listagem
         require_once __DIR__ . '/../views/listar.php';
@@ -45,17 +44,17 @@ class ClienteController {
             $this->cliente->email = $_POST['email'] ?? '';
             $this->cliente->telefone = $_POST['telefone'] ?? '';
 
-            // Tenta salvar no banco de dados
-            if ($this->cliente->create()) {
-                // Se der certo, redireciona para a lista com uma mensagem de sucesso
-                header("Location: index.php?action=listar&sucesso=1");
+            // Tenta salvar no banco de dados chamando a função cadastrar() do Model
+            if ($this->cliente->cadastrar()) {
+                // Se der certo, redireciona para a lista
+                header("Location: index.php?action=listar");
                 exit();
             } else {
                 echo "Erro ao cadastrar o cliente.";
             }
         }
 
-        // Se não for POST, apenas exibe o formulário de cadastro
+        // Se não for POST, apenas exibe o formulário de cadastro (o arquivo HTML)
         require_once __DIR__ . '/../views/cadastrar.php';
     }
 }

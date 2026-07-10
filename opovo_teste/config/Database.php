@@ -6,7 +6,7 @@
  */
 class Database {
     
-    private static $host = "localhost";
+    private static $host = "127.0.0.1";
     private static $db_name = "crud_clientes";
     private static $username = "root"; 
     private static $password = "";     
@@ -23,8 +23,9 @@ class Database {
                 self::$conn = new PDO($dsn, self::$username, self::$password);
                 self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch(PDOException $exception) {
-                echo "Erro de conexão: " . $exception->getMessage();
-            }
+        // Usamos die() para parar tudo e mostrar o erro real na tela
+        die("ERRO CRÍTICO NO BANCO DE DADOS: " . $exception->getMessage());
+    }
         }
         return self::$conn;
     }
